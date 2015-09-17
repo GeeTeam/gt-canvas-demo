@@ -9,6 +9,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>gt-front-canvas Demo Page</title>
   <!-- <link rel="stylesheet" href=""> -->
+<script src="http://code.jquery.com/jquery-1.6.min.js" type="text/javascript"></script>
+
 </head>
 <body>
   <a class="button" id="button">
@@ -24,7 +26,7 @@
           请通过验证
         </div>
       </div>
-      <script type="text/javascript" src="http://api.geetest.com/get.php?gt=09d63b4c30fd364f8e6c7c602f13ea56&width=300" async></script>
+      <script type="text/javascript" src="http://api.geetest.com/get.php?gt=11ae6ec953669c43f94144b291be7c8a&width=300" async></script>
     </div>
 
   </div>
@@ -107,29 +109,38 @@
     background-image: url('./img/return_hover.png');
   }
 </style>
-  <script>
-    var qs = function(e) {
-      return document.querySelector(e);
-    };
-    var button = document.getElementById("button");
-
-    var geetest = qs(".geetest");
-    button.onclick = function() {
+<script type="text/javascript">
+  var button = $("#button");
+  var geetest = $(".geetest")[0];
+  var close = $("#close");
+  button.click(function(){
       geetest.style.display = "block";
-    };
-    var close = document.getElementById("close");
-    close.onclick = function() {
+  });
+    close.click(function() {
       geetest.style.display = "none";
-    };
-    qs(".bg").onclick = function() {
+    });
+    $(".bg").click(function() {
       geetest.style.display = "none";
-    };
-    window.gt_custom_ajax = function(result, id, message) {
-      if(result) {
-        qs('#' + id).parentNode.parentNode.style.display = "none";
+    });
+window.gt_custom_ajax = function(result, id, message) {
+  if(result) {
+    $(".bg")[0].style.display = "none";
+    $(".wrap")[0].style.display = "none";
+    value = $('#' + id).find('input');
+    var data = {"geetest_challenge":value[0].value,"geetest_validate":value[1].value,"geetest_seccode":value[2].value}
+    $.ajax({
+      type:'POST',
+      url:'./validate.php',
+      data:'data='+JSON.stringify(data),
+      success:function(result){
+        console.log(result);
+        alert(result);
       }
-    }
-  </script>
+    })
+  }
+}
 
+
+  </script>
 </body>
 </html>
